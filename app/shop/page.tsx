@@ -1,4 +1,5 @@
 import { getProducts } from '@/lib/shopify'
+import type { ShopifyProduct } from '@/lib/shopify'
 import ShopGrid from '@/components/ShopGrid'
 import Footer from '@/components/Footer'
 
@@ -7,7 +8,7 @@ export const metadata = {
 }
 
 export default async function ShopPage() {
-  let products = []
+  let products: ShopifyProduct[] = []
   try {
     products = await getProducts()
   } catch {

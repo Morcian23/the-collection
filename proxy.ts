@@ -6,7 +6,7 @@ import type { NextRequest } from 'next/server'
 // To launch the full site, delete this file.
 // ─────────────────────────────────────────────
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Allow the root (coming soon page) and Next.js internals

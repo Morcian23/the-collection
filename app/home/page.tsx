@@ -1,4 +1,5 @@
 import { getProducts } from '@/lib/shopify'
+import type { ShopifyProduct } from '@/lib/shopify'
 import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
 import ParallaxGallery from '@/components/ParallaxGallery'
@@ -8,7 +9,7 @@ import EmailCapture from '@/components/EmailCapture'
 import Footer from '@/components/Footer'
 
 export default async function HomePage() {
-  let products = []
+  let products: ShopifyProduct[] = []
   try {
     products = await getProducts()
   } catch {
