@@ -1,16 +1,9 @@
-import { getProduct, getProducts, createCart } from '@/lib/shopify'
+import { getProduct, createCart } from '@/lib/shopify'
 import { notFound } from 'next/navigation'
 import ProductView from '@/components/ProductView'
 import Footer from '@/components/Footer'
 
-export async function generateStaticParams() {
-  try {
-    const products = await getProducts()
-    return products.map((p) => ({ handle: p.handle }))
-  } catch {
-    return []
-  }
-}
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params
