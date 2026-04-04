@@ -1,26 +1,111 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Custom Fonts ── */
+@font-face {
+  font-family: 'Shadower';
+  src: url('/fonts/Shadower.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
+@font-face {
+  font-family: 'Rasa';
+  src: url('/fonts/Rasa-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rasa';
+  src: url('/fonts/Rasa-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rasa';
+  src: url('/fonts/Rasa-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rasa';
+  src: url('/fonts/Rasa-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Rasa';
+  src: url('/fonts/Rasa-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Panamera';
+  src: url('/fonts/Panamera-Thin-BF656d45809fc0b.otf') format('opentype');
+  font-weight: 100;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Panamera';
+  src: url('/fonts/Panamera-Light-BF656d458035252.otf') format('opentype');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Panamera';
+  src: url('/fonts/Panamera-Regular-BF656d458090a6d.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Panamera';
+  src: url('/fonts/Panamera-Medium-BF656d4580635d7.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Panamera';
+  src: url('/fonts/Panamera-Bold-BF656d4580153a9.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Panamera';
+  src: url('/fonts/Panamera-Black-BF656d457f81dcb.otf') format('opentype');
+  font-weight: 900;
+  font-display: swap;
+}
+
+/* ── Theme ── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-shadower: 'Shadower', Georgia, serif;
+  --font-rasa: 'Rasa', Georgia, serif;
+  --font-panamera: 'Panamera', 'Helvetica Neue', system-ui, sans-serif;
+
+  --color-dark: #0e120a;
+  --color-cream: #f8f1ef;
+  --color-gray-soft: #5a5e56;
+  --color-sage: #c0c4b8;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f8f1ef;
+  color: #0e120a;
+  font-family: 'Panamera', 'Helvetica Neue', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #f8f1ef; }
+::-webkit-scrollbar-thumb { background: #a5a99d; }
+
+::selection {
+  background: #0e120a;
+  color: #f8f1ef;
 }
