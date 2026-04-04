@@ -102,7 +102,7 @@ export default function ComingSoon() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: 'easeOut', delay: 1.8 }}
-          className="font-panamera text-sm tracking-[0.35em] uppercase text-dark/60 mb-20 max-w-xs"
+          className="font-panamera text-sm tracking-[0.35em] uppercase text-dark font-semibold mb-20 max-w-xs"
         >
           Curated fine art prints by emerging BIPOC artists from the American South.
         </motion.p>
@@ -128,7 +128,7 @@ export default function ComingSoon() {
             </motion.div>
           ) : (
             <>
-              <p className="font-panamera text-sm tracking-[0.35em] uppercase text-dark/60 mb-8">
+              <p className="font-panamera text-sm tracking-[0.35em] uppercase text-dark font-semibold mb-8">
                 Be first to access the collection.
               </p>
               <form onSubmit={handleSubmit} className="flex border-b border-sage/60">
@@ -143,7 +143,7 @@ export default function ComingSoon() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="font-panamera text-sm tracking-[0.3em] uppercase text-dark/60 py-3 pl-6 hover:text-dark transition-colors duration-500 cursor-pointer disabled:opacity-40"
+                  className="font-panamera text-sm tracking-[0.3em] uppercase text-dark font-semibold py-3 pl-6 hover:text-dark transition-colors duration-500 cursor-pointer disabled:opacity-40"
                 >
                   {loading ? '...' : 'Notify Me'}
                 </button>
@@ -160,7 +160,7 @@ export default function ComingSoon() {
         transition={{ duration: 1.5, delay: 2.8 }}
         className="py-10 text-center"
       >
-        <p className="font-panamera text-sm text-dark/50">
+        <p className="font-panamera text-sm text-dark font-semibold">
           © {new Date().getFullYear()} The Collection
         </p>
       </motion.footer>
