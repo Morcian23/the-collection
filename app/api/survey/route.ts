@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 
+const SHEETS_URL =
+  'https://script.google.com/macros/s/AKfycbwzM2tAdOa0tcl_WJU8dGt7vPvjg4W4LibA1GERWjyC0LxMOjADYw3CXxcr_-cQJicw/exec'
+
 export async function POST(request: Request) {
   try {
     const data = await request.json()
@@ -36,10 +39,13 @@ export async function POST(request: Request) {
       }
     }
 
-    // TODO: Connect to your preferred data destination:
-    // Option A — Airtable, Notion, Google Sheets via their APIs
-    // Option B — Email via SendGrid / Resend: send full JSON to your inbox
-    // Option C — Formspree: https://formspree.io
+    // Save full response to Google Sheets via Apps Script
+    await fetch(SHEETS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).catch(() => {})
+
     console.log('Survey response received:', JSON.stringify(data, null, 2))
 
     return NextResponse.json({ success: true }, { status: 200 })
