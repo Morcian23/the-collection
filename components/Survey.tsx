@@ -1,15 +1,66 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 
+/* ── Required field definitions ── */
+const REQ_CHECKBOX  = ['q1', 'q3', 'q6_race', 'q6', 'q7', 'q10', 'q13', 'q18', 'q24']
+const REQ_RADIO     = ['q4', 'q5_gender', 'q7_income', 'q5', 'q8', 'q9', 'q11', 'q12', 'q15', 'q16', 'q17', 'q25', 'q26', 'q27']
+const REQ_TEXT      = ['q2_zip']
+const REQ_TEXTAREA  = ['q28', 'q29', 'q30']
+const Q14_SELECTS   = ['q14_gallery','q14_studio','q14_workshops','q14_youth','q14_mentorship','q14_grants','q14_artfair','q14_publicart','q14_collectors','q14_corporate','q14_residency','q14_social']
+
+function validateForm(form: HTMLFormElement): Set<string> {
+  const errs = new Set<string>()
+  for (const n of REQ_CHECKBOX) {
+    const boxes = Array.from(form.querySelectorAll<HTMLInputElement>(`input[type="checkbox"][name="${n}"]`))
+    if (!boxes.some(cb => cb.checked)) errs.add(n)
+  }
+  for (const n of REQ_RADIO) {
+    const radios = Array.from(form.querySelectorAll<HTMLInputElement>(`input[type="radio"][name="${n}"]`))
+    if (!radios.some(r => r.checked)) errs.add(n)
+  }
+  for (const n of REQ_TEXT) {
+    const el = form.querySelector<HTMLInputElement>(`[name="${n}"]`)
+    if (!el?.value.trim()) errs.add(n)
+  }
+  for (const n of REQ_TEXTAREA) {
+    const el = form.querySelector<HTMLTextAreaElement>(`[name="${n}"]`)
+    if (!el?.value.trim()) errs.add(n)
+  }
+  // Q14: at least one ranking dropdown must have a value
+  const anyRanked = Q14_SELECTS.some(n => (form.querySelector<HTMLSelectElement>(`[name="${n}"]`)?.value ?? '') !== '')
+  if (!anyRanked) errs.add('q14')
+  return errs
+}
+
 export default function Survey() {
-  const [submitted, setSubmitted] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted]           = useState(false)
+  const [loading, setLoading]               = useState(false)
+  const [errors, setErrors]                 = useState<Set<string>>(new Set())
+  const [submitAttempted, setSubmitAttempted] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
+
+  // Scroll to first errored question after React re-renders
+  useEffect(() => {
+    if (errors.size > 0 && formRef.current) {
+      const firstError = formRef.current.querySelector<HTMLElement>('[data-field-error="true"]')
+      firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [errors])
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setLoading(true)
     const form = e.currentTarget
+    setSubmitAttempted(true)
+
+    const errs = validateForm(form)
+    if (errs.size > 0) {
+      setErrors(new Set(errs))
+      return
+    }
+
+    setErrors(new Set())
+    setLoading(true)
     const data: Record<string, string | string[]> = {}
     const fields = form.elements as HTMLFormControlsCollection
 
@@ -40,6 +91,9 @@ export default function Survey() {
     setSubmitted(true)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  // Shorthand: is this field name in the error set?
+  const err = (name: string) => errors.has(name)
 
   return (
     <div className="min-h-screen bg-cream py-12 px-5">
@@ -87,23 +141,23 @@ export default function Survey() {
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} noValidate className="bg-white rounded-b-xl px-8 md:px-10 py-10">
+          <form ref={formRef} onSubmit={handleSubmit} noValidate className="bg-white rounded-b-xl px-8 md:px-10 py-10">
 
             {/* ── SECTION 1 ── */}
             <SectionHeader number="SECTION 1" title="About You" />
 
-            <Question num="1" label="Which county or community do you primarily live or work in?" sub="Select all that apply">
+            <Question num="1" label="Which county or community do you primarily live or work in?" sub="Select all that apply" error={err('q1')} fieldId="field-q1">
               {['Clayton County','South Fulton / West End','Fayette County','Coweta County','Henry County','Trilith / Fayetteville area'].map(v => (
                 <Checkbox key={v} name="q1" value={v} label={v} />
               ))}
               <OtherCheckbox name="q1" otherName="q1_other" />
             </Question>
 
-            <Question num="2" label="What is your ZIP code?">
+            <Question num="2" label="What is your ZIP code?" error={err('q2_zip')} fieldId="field-q2_zip">
               <TextInput name="q2_zip" placeholder="e.g. 30214" style={{ maxWidth: 180 }} maxLength={10} />
             </Question>
 
-            <Question num="3" label="How do you primarily identify your relationship to the arts?" sub="Select all that apply">
+            <Question num="3" label="How do you primarily identify your relationship to the arts?" sub="Select all that apply" error={err('q3')} fieldId="field-q3">
               {[
                 ['Visual artist','Visual artist (painter, sculptor, photographer, printmaker, etc.)'],
                 ['Film / TV / entertainment professional','Film / TV / entertainment industry professional'],
@@ -118,7 +172,7 @@ export default function Survey() {
               <OtherCheckbox name="q3" otherName="q3_other" />
             </Question>
 
-            <Question num="4" label="What is your age range?">
+            <Question num="4" label="What is your age range?" error={err('q4')} fieldId="field-q4">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {['Under 18','18–24','25–34','35–44','45–54','55–64','65+','Prefer not to say'].map(v => (
                   <Radio key={v} name="q4" value={v} label={v} />
@@ -126,7 +180,7 @@ export default function Survey() {
               </div>
             </Question>
 
-            <Question num="5" label="What is your gender identity?">
+            <Question num="5" label="What is your gender identity?" error={err('q5_gender')} fieldId="field-q5_gender">
               {[
                 'Man',
                 'Woman',
@@ -141,7 +195,7 @@ export default function Survey() {
               </label>
             </Question>
 
-            <Question num="6" label="How do you identify racially or ethnically?" sub="Select all that apply">
+            <Question num="6" label="How do you identify racially or ethnically?" sub="Select all that apply" error={err('q6_race')} fieldId="field-q6_race">
               {[
                 'Black / African American',
                 'Hispanic / Latino / Latina / Latinx',
@@ -155,7 +209,7 @@ export default function Survey() {
               <OtherCheckbox name="q6_race" otherName="q6_race_other" />
             </Question>
 
-            <Question num="7" label="What is your approximate annual household income?">
+            <Question num="7" label="What is your approximate annual household income?" error={err('q7_income')} fieldId="field-q7_income">
               {[
                 'Under $25,000',
                 '$25,000–$49,999',
@@ -173,7 +227,7 @@ export default function Survey() {
             {/* ── SECTION 2 ── */}
             <SectionHeader number="SECTION 2" title="Your Current Arts Engagement" />
 
-            <Question num="5" label="How often do you currently engage with fine arts activities (galleries, exhibitions, art fairs, studio events, etc.)?">
+            <Question num="5" label="How often do you currently engage with fine arts activities (galleries, exhibitions, art fairs, studio events, etc.)?" error={err('q5')} fieldId="field-q5">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {['Weekly','Monthly','A few times a year','Rarely','Never'].map(v => (
                   <Radio key={v} name="q5" value={v} label={v} />
@@ -181,7 +235,7 @@ export default function Survey() {
               </div>
             </Question>
 
-            <Question num="6" label="Where do you currently go to experience fine art?" sub="Select all that apply">
+            <Question num="6" label="Where do you currently go to experience fine art?" sub="Select all that apply" error={err('q6')} fieldId="field-q6">
               {[
                 ['Midtown Atlanta','Midtown Atlanta (High Museum, galleries, etc.)'],
                 ['West Midtown / Westside Arts District','West Midtown / Westside Arts District'],
@@ -194,7 +248,7 @@ export default function Survey() {
               <OtherCheckbox name="q6" otherName="q6_other" />
             </Question>
 
-            <Question num="7" label="What prevents you from engaging more with fine arts on the southside?" sub="Select all that apply">
+            <Question num="7" label="What prevents you from engaging more with fine arts on the southside?" sub="Select all that apply" error={err('q7')} fieldId="field-q7">
               {[
                 ['Not enough galleries or exhibition spaces nearby','Not enough galleries or exhibition spaces nearby'],
                 ['Events and venues are hard to find or discover','Events and venues are hard to find or discover'],
@@ -207,7 +261,7 @@ export default function Survey() {
               <OtherCheckbox name="q7" otherName="q7_other" />
             </Question>
 
-            <Question num="8" label="In the past 12 months, have you purchased any fine art (original works, prints, photography, sculpture, etc.)?">
+            <Question num="8" label="In the past 12 months, have you purchased any fine art (original works, prints, photography, sculpture, etc.)?" error={err('q8')} fieldId="field-q8">
               {[
                 ['Yes — regularly (3+ times)','Yes — regularly (3 or more times)'],
                 ['Yes — once or twice','Yes — once or twice'],
@@ -216,7 +270,7 @@ export default function Survey() {
               ].map(([v, l]) => <Radio key={v} name="q8" value={v} label={l} />)}
             </Question>
 
-            <Question num="9" label="If you have purchased art, what was your typical price range per piece?">
+            <Question num="9" label="If you have purchased art, what was your typical price range per piece?" error={err('q9')} fieldId="field-q9">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {['Under $100','$100–$500','$500–$1,000','$1,000–$5,000','Over $5,000','N/A'].map(v => (
                   <Radio key={v} name="q9" value={v} label={v} />
@@ -233,7 +287,7 @@ export default function Survey() {
               Trilith Studios and the Trilith community in Fayetteville represent one of the largest film and entertainment production hubs in the nation. We see a powerful opportunity to bridge the fine arts community with the broader creative economy of this region.
             </SectionNote>
 
-            <Question num="10" label="Do you have a connection to Trilith Studios or the Trilith community?">
+            <Question num="10" label="Do you have a connection to Trilith Studios or the Trilith community?" error={err('q10')} fieldId="field-q10">
               {[
                 ['Work at Trilith Studios or a production company there','I work at Trilith Studios or for a production company based there'],
                 ['Live in Trilith residential community','I live in the Trilith residential community'],
@@ -244,7 +298,7 @@ export default function Survey() {
               ].map(([v, l]) => <Checkbox key={v} name="q10" value={v} label={l} />)}
             </Question>
 
-            <Question num="11" label="How interested would you be in programming that bridges fine arts and the film / entertainment industry?" sub="e.g., concept art exhibitions, production design showcases, costume and set design galleries, artist-filmmaker collaborations">
+            <Question num="11" label="How interested would you be in programming that bridges fine arts and the film / entertainment industry?" sub="e.g., concept art exhibitions, production design showcases, costume and set design galleries, artist-filmmaker collaborations" error={err('q11')} fieldId="field-q11">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {['Very interested','Somewhat interested','Neutral','Not interested','Not sure'].map(v => (
                   <Radio key={v} name="q11" value={v} label={v} />
@@ -252,7 +306,7 @@ export default function Survey() {
               </div>
             </Question>
 
-            <Question num="12" label="Should a fine arts nonprofit actively partner with Trilith Studios and production companies to create opportunities for local artists?">
+            <Question num="12" label="Should a fine arts nonprofit actively partner with Trilith Studios and production companies to create opportunities for local artists?" error={err('q12')} fieldId="field-q12">
               {[
                 ['Yes — critical opportunity','Yes — this is a critical opportunity for local artists'],
                 ['Yes — but keep programs distinct','Yes — but fine arts and film should remain distinct programs'],
@@ -261,7 +315,7 @@ export default function Survey() {
               ].map(([v, l]) => <Radio key={v} name="q12" value={v} label={l} />)}
             </Question>
 
-            <Question num="13" label="What types of crossover programming interest you most?" sub="Select all that apply">
+            <Question num="13" label="What types of crossover programming interest you most?" sub="Select all that apply" error={err('q13')} fieldId="field-q13">
               {[
                 ['Exhibitions featuring concept art / production design from films','Exhibitions featuring concept art, storyboards, or production design from films'],
                 ['Artist residencies sponsored by production studios','Artist residencies sponsored by production studios'],
@@ -279,7 +333,7 @@ export default function Survey() {
             {/* ── SECTION 4 ── */}
             <SectionHeader number="SECTION 4" title="Community Needs & Priorities" />
 
-            <Question num="14" label="Which of the following do you feel are most needed in the southside Atlanta region?" sub="Rank your top 3 using the dropdowns — 1 (most needed), 2, or 3">
+            <Question num="14" label="Which of the following do you feel are most needed in the southside Atlanta region?" sub="Rank your top 3 using the dropdowns — 1 (most needed), 2, or 3" error={err('q14')} fieldId="field-q14">
               <p className="font-panamera text-xs text-gray-soft italic mb-4">Select 1 (most needed), 2, or 3 — or leave blank if not applicable.</p>
               <div className="flex flex-col gap-3">
                 {[
@@ -307,7 +361,7 @@ export default function Survey() {
               </div>
             </Question>
 
-            <Question num="15" label="If a professional fine art gallery opened in your area, how likely would you be to visit regularly?">
+            <Question num="15" label="If a professional fine art gallery opened in your area, how likely would you be to visit regularly?" error={err('q15')} fieldId="field-q15">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {['Very likely','Somewhat likely','Not sure','Unlikely'].map(v => (
                   <Radio key={v} name="q15" value={v} label={v} />
@@ -315,7 +369,7 @@ export default function Survey() {
               </div>
             </Question>
 
-            <Question num="16" label="How important is it to you that a local arts organization reflects the full diversity of the southside Atlanta community — including its many cultures, backgrounds, and creative industries?">
+            <Question num="16" label="How important is it to you that a local arts organization reflects the full diversity of the southside Atlanta community — including its many cultures, backgrounds, and creative industries?" error={err('q16')} fieldId="field-q16">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {['Extremely important','Very important','Somewhat important','Not important'].map(v => (
                   <Radio key={v} name="q16" value={v} label={v} />
@@ -323,7 +377,7 @@ export default function Survey() {
               </div>
             </Question>
 
-            <Question num="17" label="Do you believe the arts can play a meaningful role in the economic development of the southside Atlanta region?">
+            <Question num="17" label="Do you believe the arts can play a meaningful role in the economic development of the southside Atlanta region?" error={err('q17')} fieldId="field-q17">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {['Yes, absolutely','Yes, with the right approach','Somewhat','No','Not sure'].map(v => (
                   <Radio key={v} name="q17" value={v} label={v} />
@@ -331,7 +385,7 @@ export default function Survey() {
               </div>
             </Question>
 
-            <Question num="18" label="What location would be most convenient for you to access arts programming?" sub="Select all that apply">
+            <Question num="18" label="What location would be most convenient for you to access arts programming?" sub="Select all that apply" error={err('q18')} fieldId="field-q18">
               {['East Point / College Park / Hapeville','Jonesboro / Morrow / Riverdale','Fayetteville / Trilith area','Newnan / Peachtree City','McDonough / Stockbridge','Online / virtual is fine for me'].map(v => (
                 <Checkbox key={v} name="q18" value={v} label={v} />
               ))}
@@ -340,7 +394,7 @@ export default function Survey() {
             <Divider />
 
             {/* ── SECTION 5 ── */}
-            <SectionHeader number="SECTION 5" title="For Artists & Creative Professionals" />
+            <SectionHeader number="SECTION 5" title="For Artists & Creative Professionals" optional />
             <SectionNote>If you are not an artist or creative professional, feel free to skip to Section 6.</SectionNote>
 
             <Question num="19" label="What is your primary art medium or creative discipline?">
@@ -397,7 +451,7 @@ export default function Survey() {
             {/* ── SECTION 6 ── */}
             <SectionHeader number="SECTION 6" title="Support & Engagement" />
 
-            <Question num="24" label="How would you most like to support or engage with a fine arts nonprofit in your community?" sub="Select all that apply">
+            <Question num="24" label="How would you most like to support or engage with a fine arts nonprofit in your community?" sub="Select all that apply" error={err('q24')} fieldId="field-q24">
               {[
                 'Attend exhibitions, events, and programs',
                 'Purchase artwork directly from the gallery or organization',
@@ -412,7 +466,7 @@ export default function Survey() {
               <OtherCheckbox name="q24" otherName="q24_other" />
             </Question>
 
-            <Question num="25" label="Would you be willing to pay an annual membership fee to support a local fine arts nonprofit and receive benefits such as event access, exhibition previews, and artist discounts?">
+            <Question num="25" label="Would you be willing to pay an annual membership fee to support a local fine arts nonprofit and receive benefits such as event access, exhibition previews, and artist discounts?" error={err('q25')} fieldId="field-q25">
               {[
                 'Yes — $25–$50 per year',
                 'Yes — $50–$100 per year',
@@ -422,13 +476,13 @@ export default function Survey() {
               ].map(v => <Radio key={v} name="q25" value={v} label={v} />)}
             </Question>
 
-            <Question num="26" label="Are you aware of any existing fine arts organizations currently serving the southside Atlanta region?">
+            <Question num="26" label="Are you aware of any existing fine arts organizations currently serving the southside Atlanta region?" error={err('q26')} fieldId="field-q26">
               <Radio name="q26" value="No, not aware of any" label="No, I am not aware of any" />
               <Radio name="q26" value="Yes" label="Yes — please list them below" />
               <TextInput name="q26_list" placeholder="Organization names (if yes)" className="mt-3" />
             </Question>
 
-            <Question num="27" label="How did you hear about this survey?">
+            <Question num="27" label="How did you hear about this survey?" error={err('q27')} fieldId="field-q27">
               <div className="flex flex-wrap gap-x-6 gap-y-3">
                 {['Social media','Email','Friend or colleague','Community event','Flyer or poster'].map(v => (
                   <Radio key={v} name="q27" value={v} label={v} />
@@ -442,15 +496,15 @@ export default function Survey() {
             {/* ── SECTION 7 ── */}
             <SectionHeader number="SECTION 7" title="Open-Ended Feedback" />
 
-            <Question num="28" label="In your own words, what does a thriving fine arts community look like in the southside Atlanta region? What would make you proud to call this an arts destination?">
+            <Question num="28" label="In your own words, what does a thriving fine arts community look like in the southside Atlanta region? What would make you proud to call this an arts destination?" error={err('q28')} fieldId="field-q28">
               <Textarea name="q28" placeholder="Share your vision..." />
             </Question>
 
-            <Question num="29" label="What is one program, event, or service that does not currently exist in this region that you wish someone would create?">
+            <Question num="29" label="What is one program, event, or service that does not currently exist in this region that you wish someone would create?" error={err('q29')} fieldId="field-q29">
               <Textarea name="q29" placeholder="Your idea..." />
             </Question>
 
-            <Question num="30" label="Is there anything else you would like us to know as we plan our programs and services?">
+            <Question num="30" label="Is there anything else you would like us to know as we plan our programs and services?" error={err('q30')} fieldId="field-q30">
               <Textarea name="q30" placeholder="Any additional thoughts..." />
             </Question>
 
@@ -494,8 +548,20 @@ export default function Survey() {
               </div>
             </Question>
 
+            {/* Error banner */}
+            {submitAttempted && errors.size > 0 && (
+              <div className="mb-6 bg-red-50 border border-red-300 px-5 py-4 rounded">
+                <p className="font-panamera text-sm text-red-700 font-semibold">
+                  Please answer all required questions before submitting.
+                </p>
+                <p className="font-panamera text-xs text-red-500 mt-1">
+                  Unanswered questions are highlighted above. Section 5 and Section 8 are optional.
+                </p>
+              </div>
+            )}
+
             {/* Submit */}
-            <div className="mt-12 text-center">
+            <div className="mt-4 text-center">
               <button
                 type="submit"
                 disabled={loading}
@@ -546,14 +612,30 @@ function SectionNote({ children }: { children: React.ReactNode }) {
   )
 }
 
-function Question({ num, label, sub, children }: { num?: string; label: React.ReactNode; sub?: string; children: React.ReactNode }) {
+function Question({
+  num, label, sub, children, error, fieldId,
+}: {
+  num?: string
+  label: React.ReactNode
+  sub?: string
+  children: React.ReactNode
+  error?: boolean
+  fieldId?: string
+}) {
   return (
-    <div className="mb-8">
-      <span className="block font-panamera text-sm font-semibold text-dark mb-3 leading-snug">
+    <div
+      className={`mb-8 transition-all ${error ? 'pl-3 -ml-3 border-l-2 border-red-400' : ''}`}
+      data-field-error={error ? 'true' : undefined}
+      id={fieldId}
+    >
+      <span className="block font-panamera text-sm font-semibold text-dark mb-1 leading-snug">
         {num && <span className="text-sage mr-1">{num}.</span>}
         {label}
         {sub && <em className="font-normal text-gray-soft ml-1">({sub})</em>}
       </span>
+      {error && (
+        <p className="font-panamera text-xs text-red-500 mb-3">This question is required.</p>
+      )}
       {children}
     </div>
   )
