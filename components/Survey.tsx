@@ -126,6 +126,48 @@ export default function Survey() {
               </div>
             </Question>
 
+            <Question num="5" label="What is your gender identity?">
+              {[
+                'Man',
+                'Woman',
+                'Non-binary / gender non-conforming',
+                'Transgender',
+                'Prefer not to say',
+              ].map(v => <Radio key={v} name="q5_gender" value={v} label={v} />)}
+              <label className="flex items-center gap-3 cursor-pointer font-panamera text-sm text-dark mt-2.5">
+                <input type="radio" name="q5_gender" value="Prefer to self-describe" className="w-4 h-4 accent-dark flex-shrink-0 cursor-pointer" />
+                <span>Prefer to self-describe:</span>
+                <TextInput name="q5_gender_other" placeholder="Please describe" className="flex-1" />
+              </label>
+            </Question>
+
+            <Question num="6" label="How do you identify racially or ethnically?" sub="Select all that apply">
+              {[
+                'Black / African American',
+                'Hispanic / Latino / Latina / Latinx',
+                'White / Caucasian',
+                'Asian / Pacific Islander',
+                'Native American / Indigenous',
+                'Middle Eastern / North African',
+                'Multiracial',
+                'Prefer not to say',
+              ].map(v => <Checkbox key={v} name="q6_race" value={v} label={v} />)}
+              <OtherCheckbox name="q6_race" otherName="q6_race_other" />
+            </Question>
+
+            <Question num="7" label="What is your approximate annual household income?">
+              {[
+                'Under $25,000',
+                '$25,000–$49,999',
+                '$50,000–$74,999',
+                '$75,000–$99,999',
+                '$100,000–$149,999',
+                '$150,000–$199,999',
+                '$200,000 or more',
+                'Prefer not to say',
+              ].map(v => <Radio key={v} name="q7_income" value={v} label={v} />)}
+            </Question>
+
             <Divider />
 
             {/* ── SECTION 2 ── */}
