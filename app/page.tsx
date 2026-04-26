@@ -1,10 +1,10 @@
-import ComingSoon from '@/components/ComingSoon'
+import Survey from '@/components/Survey'
 
 export const metadata = {
-  title: 'The Collection — Coming Soon',
-  description: 'Curated fine art prints by emerging BIPOC artists from the American South.',
+  title: 'Community Survey — The Collection Studios',
+  description: 'Help shape the future of fine arts in the southside Atlanta region.',
 }
 
 export default function Page() {
-  return <ComingSoon />
+  return <Survey />
 }
