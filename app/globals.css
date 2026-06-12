@@ -83,10 +83,21 @@
   --font-rasa: 'Rasa', Georgia, serif;
   --font-panamera: 'Panamera', 'Helvetica Neue', system-ui, sans-serif;
 
-  --color-dark: #0e120a;
-  --color-cream: #f8f1ef;
+  --color-dark: #080808;
+  --color-cream: #F5F2ED;
   --color-gray-soft: #5a5e56;
   --color-sage: #c0c4b8;
+
+  /* Audience jewel tones */
+  --color-crimson: #8C1A2A;
+  --color-crimson-deep: #5C0E1A;
+  --color-crimson-light: #C44455;
+  --color-amethyst: #4A1E8C;
+  --color-amethyst-deep: #2D0E6B;
+  --color-amethyst-light: #7B52C0;
+  --color-emerald: #1A5C3A;
+  --color-emerald-deep: #0D3D26;
+  --color-emerald-light: #2E8A58;
 }
 
 /* ── Base ── */
