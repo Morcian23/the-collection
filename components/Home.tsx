@@ -91,8 +91,74 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── THREE PILLARS ── */}
+      <section className="bg-dark py-24 px-10">
+        <div className="max-w-5xl mx-auto">
+          <p className="font-panamera text-xs tracking-[0.3em] uppercase text-sage mb-14 flex items-center gap-4">
+            <span className="inline-block w-10 h-px bg-sage opacity-60" />
+            Who We Serve
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-0 border border-[#2a2a2a]">
+
+            {/* Artists */}
+            <div className="p-10 border-b md:border-b-0 md:border-r border-[#2a2a2a]">
+              <div className="w-full h-[3px] mb-8" style={{ background: '#8C1A2A' }} />
+              <p className="font-panamera text-xs tracking-[0.3em] uppercase mb-4" style={{ color: '#8C1A2A' }}>
+                Artists
+              </p>
+              <p className="font-rasa text-2xl font-light text-cream mb-5 leading-snug">
+                The Makers
+              </p>
+              <p className="font-panamera text-xs text-cream/50 leading-relaxed">
+                Emerging artists across the American South who need direct access to
+                collectors and community — not just exposure, but sustained relationships
+                that support a career.
+              </p>
+            </div>
+
+            {/* Collectors */}
+            <div className="p-10 border-b md:border-b-0 md:border-r border-[#2a2a2a]">
+              <div className="w-full h-[3px] mb-8" style={{ background: '#4A1E8C' }} />
+              <p className="font-panamera text-xs tracking-[0.3em] uppercase mb-4" style={{ color: '#9B6FD4' }}>
+                Collectors
+              </p>
+              <p className="font-rasa text-2xl font-light text-cream mb-5 leading-snug">
+                The Patrons
+              </p>
+              <p className="font-panamera text-xs text-cream/50 leading-relaxed">
+                Culturally engaged, financially established South Metro residents —
+                Fayette County, Trilith, Clayton, South Fulton — who are ready to invest
+                in art and the community it comes from.
+              </p>
+            </div>
+
+            {/* Community */}
+            <div className="p-10">
+              <div className="w-full h-[3px] mb-8" style={{ background: '#1A5C3A' }} />
+              <p className="font-panamera text-xs tracking-[0.3em] uppercase mb-4" style={{ color: '#3BA06A' }}>
+                Community
+              </p>
+              <p className="font-rasa text-2xl font-light text-cream mb-5 leading-snug">
+                The Foundation
+              </p>
+              <p className="font-panamera text-xs text-cream/50 leading-relaxed">
+                The broader South Metro Atlanta community — the place the art comes from,
+                the people it belongs to, and the reason the ecosystem exists at all.
+              </p>
+            </div>
+
+          </div>
+
+          {/* Connector note */}
+          <p className="font-panamera text-xs tracking-[0.2em] uppercase text-sage/50 text-center mt-10">
+            The Collection Initiative connects all three.
+          </p>
+        </div>
+      </section>
+
       {/* ── STATS ── */}
-      <section className="bg-dark py-16 px-10">
+      <section className="bg-dark py-16 px-10 border-t border-[#2a2a2a]">
         <div className="max-w-5xl mx-auto grid grid-cols-3 divide-x divide-sage/20">
           {stats.map((s) => (
             <div key={s.label} className="text-center px-8">
