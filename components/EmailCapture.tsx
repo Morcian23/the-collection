@@ -32,7 +32,7 @@ export default function EmailCapture() {
           transition={{ duration: 1.2 }}
           className="font-panamera text-xs tracking-[0.4em] uppercase text-gray-soft mb-12"
         >
-          Be the first to access new releases.
+          Get in the room first.
         </motion.p>
 
         {submitted ? (

@@ -5,12 +5,11 @@ import Nav from '@/components/Nav'
 import EmailCapture from '@/components/EmailCapture'
 import Footer from '@/components/Footer'
 
-/* ── Programs data ── */
 const programs = [
   {
     num: '01',
     title: 'Experiential Events',
-    desc: 'High-end exhibitions, immersive installations, and live performance integrations — curated experiences that connect art with the communities that create it.',
+    desc: 'High-end exhibitions, immersive installations, and live performance integrations — curated experiences that put artists and collectors in the same room.',
     items: ['Gallery Openings', 'Trilith Gala', 'Immersive Installations'],
   },
   {
@@ -27,7 +26,6 @@ const programs = [
   },
 ]
 
-/* ── Stats ── */
 const stats = [
   { num: '6', label: 'Counties Served' },
   { num: '150+', label: 'Artists Supported' },
@@ -42,25 +40,22 @@ export default function Home() {
       {/* ── HERO ── */}
       <section className="bg-dark text-cream min-h-screen flex flex-col justify-between px-10 pt-32 pb-20">
         <div className="max-w-5xl mx-auto w-full flex-1 flex flex-col justify-center">
-          {/* Eyebrow */}
           <p className="font-panamera text-xs tracking-[0.35em] uppercase text-sage mb-8 flex items-center gap-4">
             <span className="inline-block w-12 h-px bg-sage opacity-70" />
             The Collection Initiative
           </p>
 
-          {/* Headline */}
           <h1 className="font-rasa text-6xl md:text-7xl lg:text-8xl font-light text-cream leading-[0.97] mb-10 max-w-4xl">
-            Fine arts<br />
-            <em className="italic text-sage">for the southside.</em>
+            The South<br />
+            <em className="italic text-sage">collects.</em>
           </h1>
 
-          {/* Subhead */}
           <p className="font-panamera text-base md:text-lg text-cream/70 leading-relaxed max-w-2xl mb-12">
-            Building a thriving, inclusive arts ecosystem across southside Atlanta —
-            for artists, collectors, educators, and the communities that shape culture.
+            We curate the relationships between artists, collectors, and the communities
+            they come from — building the connective tissue South Metro Atlanta's arts
+            ecosystem has always deserved.
           </p>
 
-          {/* CTAs */}
           <div className="flex flex-wrap gap-5">
             <Link
               href="/about"
@@ -77,7 +72,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Hero bottom strip — counties */}
         <div className="max-w-5xl mx-auto w-full border-t border-sage/20 pt-8 mt-16">
           <p className="font-panamera text-xs tracking-[0.3em] uppercase text-sage/60 text-center">
             Clayton · South Fulton · Fayette · Coweta · Henry · Trilith
@@ -88,10 +82,10 @@ export default function Home() {
       {/* ── MISSION STRIP ── */}
       <section className="bg-cream py-20 px-10">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="font-panamera text-xs tracking-[0.3em] uppercase text-gray-soft mb-6">Our Mission</p>
+          <p className="font-panamera text-xs tracking-[0.3em] uppercase text-gray-soft mb-6">Our Role</p>
           <p className="font-rasa text-3xl md:text-4xl font-light text-dark leading-snug">
-            To support and connect artists, curators, and collectors across the American South through{' '}
-            <em className="italic text-gray-soft">community-based programming</em> and cultural initiatives.
+            The artists are here. The collectors are here. The community is here.{' '}
+            <em className="italic text-gray-soft">The Collection Initiative is how they find each other.</em>
           </p>
           <div className="w-16 h-px bg-sage mx-auto mt-10" />
         </div>
@@ -157,8 +151,9 @@ export default function Home() {
               Help us build<br /><em className="italic text-sage">what's next.</em>
             </h2>
             <p className="font-panamera text-sm text-cream/70 leading-relaxed mb-8 max-w-lg">
-              We're mapping the fine arts landscape across southside Atlanta. Your voice shapes our programming,
-              gallery spaces, artist support, and community services. Every response matters.
+              We're mapping the fine arts landscape across southside Atlanta. Your voice
+              shapes our programming, gallery spaces, and artist support. The region moves
+              forward together.
             </p>
             <Link
               href="/survey"
@@ -167,16 +162,15 @@ export default function Home() {
               Take the Survey →
             </Link>
             <p className="font-panamera text-xs text-sage/60 mt-5 tracking-wide">
-              Takes 8–10 minutes · All responses anonymous and confidential
+              Takes 8–10 minutes · All responses confidential
             </p>
           </div>
 
-          {/* Survey topics */}
           <div className="border-l border-sage/20 pl-12">
             <p className="font-panamera text-xs tracking-[0.2em] uppercase text-sage mb-6">The survey covers</p>
             <ul className="space-y-4">
               {[
-                'Your arts engagement and barriers to access',
+                'Your arts engagement and what keeps you from it',
                 'Community needs and priorities',
                 'The Trilith Studios creative economy',
                 'Support for local artists and studios',
@@ -204,13 +198,14 @@ export default function Home() {
               Where we live<br /><em className="italic text-gray-soft">and work.</em>
             </h2>
             <p className="font-panamera text-sm text-gray-soft leading-relaxed mb-6">
-              The Collection Initiative is rooted in the counties and communities that form the creative backbone
-              of southside Atlanta — from the Lee Street Arts District to the Fayette Arts District and beyond.
+              The Collection Initiative is rooted in the counties and communities that form
+              the creative backbone of southside Atlanta — from the Lee Street Arts District
+              to the Fayette Arts District and beyond.
             </p>
             <p className="font-panamera text-sm text-gray-soft leading-relaxed">
-              We see a powerful opportunity to bridge emerging BIPOC artists with the broader creative economy —
-              including the film and entertainment industry anchored at Trilith Studios in Fayetteville, one of
-              the largest production hubs in the nation.
+              The South has always had culture. We built the room where it gets its due —
+              connecting emerging BIPOC artists with collectors, curators, and the broader
+              creative economy anchored at Trilith Studios in Fayetteville.
             </p>
           </div>
 
@@ -237,8 +232,9 @@ export default function Home() {
             We take both seriously.
           </h2>
           <p className="font-panamera text-sm text-cream/60 leading-relaxed max-w-2xl mx-auto mb-12">
-            From gallery opportunities and artist residencies to mentorship, grant support, and collector development —
-            The Collection Initiative builds the infrastructure that lets Southern artists thrive professionally.
+            From gallery opportunities and artist residencies to mentorship, grant support,
+            and collector development — The Collection Initiative builds the infrastructure
+            that sustains Southern artists' careers.
           </p>
           <div className="flex flex-wrap justify-center gap-5">
             <Link
